@@ -1,0 +1,47 @@
+# GitHub Pages Configuration
+theme: jekyll-theme-cayman
+title: ASUS B550 Configuration
+description: Maximal on-chip fan control for ASUS ROG STRIX B550-F GAMING WIFI motherboards
+show_downloads: true
+google_analytics: # Add your GA tracking ID if desired
+
+# Navigation
+nav:
+  - title: Home
+    url: /
+  - title: Documentation
+    url: /docs/
+  - title: Contributing
+    url: /CONTRIBUTING
+  - title: Support
+    url: /SUPPORT
+  - title: Security
+    url: /SECURITY
+
+# Build settings
+markdown: kramdown
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+
+# Exclude from processing
+exclude:
+  - .github/
+  - scripts/
+  - systemd/
+  - udev/
+  - etc/
+  - examples/
+  - tests/
+  - PKGBUILD
+  - Makefile
+  - '*.install'
+  - node_modules/
+  - vendor/
+
+# Include
+include:
+  - CONTRIBUTING.md
+  - SECURITY.md
+  - SUPPORT.md
+  - CHANGELOG.md

@@ -6,10 +6,11 @@
 
 [![Lint](https://github.com/Oichkatzelesfrettschen/asus-b550-config/actions/workflows/lint.yml/badge.svg)](https://github.com/Oichkatzelesfrettschen/asus-b550-config/actions/workflows/lint.yml)
 [![Build & Test](https://github.com/Oichkatzelesfrettschen/asus-b550-config/actions/workflows/build.yml/badge.svg)](https://github.com/Oichkatzelesfrettschen/asus-b550-config/actions/workflows/build.yml)
+[![Test Suite](https://github.com/Oichkatzelesfrettschen/asus-b550-config/actions/workflows/test.yml/badge.svg)](https://github.com/Oichkatzelesfrettschen/asus-b550-config/actions/workflows/test.yml)
 [![Documentation](https://github.com/Oichkatzelesfrettschen/asus-b550-config/actions/workflows/documentation.yml/badge.svg)](https://github.com/Oichkatzelesfrettschen/asus-b550-config/actions/workflows/documentation.yml)
 [![Security](https://github.com/Oichkatzelesfrettschen/asus-b550-config/actions/workflows/security.yml/badge.svg)](https://github.com/Oichkatzelesfrettschen/asus-b550-config/actions/workflows/security.yml)
 
-> **CI/CD Status**: All checks automated • [View Workflows](.github/workflows/) • [CI/CD Docs](.github/CI-CD.md)
+> **CI/CD Status**: All checks automated • [View Workflows](.github/workflows/) • [CI/CD Docs](.github/CI-CD.md) • [Run Tests](tests/)
 
 Maximal on-chip fan control for ASUS ROG STRIX B550-F GAMING WIFI motherboards using the Nuvoton NCT6798D Super I/O chip.
 
@@ -381,6 +382,35 @@ sudo pacman -U eirikr-asus-b550-config-*.pkg.tar.*
 sudo systemctl restart max-fans.service
 sudo /usr/lib/eirikr/max-fans-advanced.sh --verify
 ```
+
+### Development with Makefile
+
+A comprehensive Makefile is provided for common development tasks:
+
+```bash
+# Show all available targets
+make help
+
+# Setup development environment
+make setup
+
+# Run all linters
+make lint
+
+# Run test suite
+make test
+
+# Build and validate
+make validate
+
+# Build the package
+make build-package
+
+# Clean build artifacts
+make clean
+```
+
+See `make help` for the complete list of targets.
 
 ## Uninstallation
 

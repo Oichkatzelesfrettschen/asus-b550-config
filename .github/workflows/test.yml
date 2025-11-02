@@ -1,0 +1,134 @@
+name: Test Suite
+
+on:
+  push:
+    branches: [ main, develop, copilot/** ]
+  pull_request:
+    branches: [ main, develop ]
+  schedule:
+    # Run tests weekly on Monday at 6:00 UTC
+    - cron: '0 6 * * 1'
+
+jobs:
+  test-suite:
+    name: Run Test Suite
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install test dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y shellcheck gcc
+
+      - name: Run test suite
+        run: |
+          chmod +x tests/run-tests.sh
+          ./tests/run-tests.sh
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: tests/*.log
+          retention-days: 30
+          if-no-files-found: ignore
+
+  makefile-targets:
+    name: Test Makefile Targets
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        target: [lint-shell, test-syntax, test-build]
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y shellcheck gcc make
+          npm install -g markdownlint-cli
+
+      - name: Run make ${{ matrix.target }}
+        run: make ${{ matrix.target }}
+
+  multi-gcc-version:
+    name: Test C Code with Multiple GCC Versions
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        gcc-version: ['11', '12', '13']
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup GCC ${{ matrix.gcc-version }}
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc-${{ matrix.gcc-version }}
+          sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-${{ matrix.gcc-version }} 100
+
+      - name: Compile nct-id
+        run: |
+          gcc --version
+          gcc -std=c2x -O2 -Wall -Wextra -Werror \
+              -o nct-id scripts/nct-id.c
+
+      - name: Verify binary
+        run: |
+          file nct-id
+          ls -lh nct-id
+
+  shell-standards:
+    name: Test Shell Scripts (Bash versions)
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        bash-version: ['5.0', '5.1', '5.2']
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Bash ${{ matrix.bash-version }}
+        uses: docker://bash:${{ matrix.bash-version }}
+        with:
+          entrypoint: /bin/bash
+          args: -c "bash -n scripts/*.sh && echo 'Scripts compatible with Bash ${{ matrix.bash-version }}'"
+
+  package-build-test:
+    name: Test Package Building (Arch Linux)
+    runs-on: ubuntu-latest
+    container:
+      image: archlinux:latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Update system and install dependencies
+        run: |
+          pacman -Syu --noconfirm
+          pacman -S --noconfirm base-devel namcap
+
+      - name: Create build user
+        run: |
+          useradd -m builder
+          echo 'builder ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers
+          chown -R builder:builder .
+
+      - name: Test package build
+        run: |
+          su builder -c "makepkg --nobuild --nodeps"
+
+      - name: Run namcap
+        run: namcap PKGBUILD || true
