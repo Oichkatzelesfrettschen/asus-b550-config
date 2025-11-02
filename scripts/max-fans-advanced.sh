@@ -102,8 +102,6 @@ set -o pipefail
 ################################################################################
 
 readonly HWMON_PATH="/sys/class/hwmon"
-SCRIPT_NAME="$(basename "$0")"
-readonly SCRIPT_NAME
 
 # Default 7-point SmartFan IV curve (conservative, gradual ramp)
 # DECISION: Wider spacing for acoustic comfort + thermal safety

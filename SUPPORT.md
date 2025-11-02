@@ -148,7 +148,7 @@ For questions, ideas, and community support:
 Want to help improve the project?
 
 - **[Contributing Guidelines](CONTRIBUTING.md)**
-- **[Code of Conduct](#)** (Be respectful and constructive)
+- **Code of Conduct**: Be respectful and constructive
 
 ## Security Issues
 
