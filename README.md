@@ -128,6 +128,8 @@ Complete documentation is included in the package (located in `docs/`):
 - **[NCT6798D-ADVANCED-CONTROLS.md](docs/NCT6798D-ADVANCED-CONTROLS.md)** — All control modes and capabilities
 - **[CONTRIBUTING.md](CONTRIBUTING.md)** — Contribution guidelines
 - **[CHANGELOG.md](CHANGELOG.md)** — Version history
+- **[SECURITY.md](SECURITY.md)** — Security policy and vulnerability reporting
+- **[SUPPORT.md](SUPPORT.md)** — Getting help and troubleshooting
 
 View installed documentation:
 
@@ -249,11 +251,18 @@ Repository Structure:
 ├── etc/                            # Configuration files
 │   └── modprobe-nct6798d.conf
 ├── examples/                       # Example configurations
+│   ├── README.md
 │   └── max-fans-restore.conf.example
+├── .github/                        # GitHub templates
+│   ├── ISSUE_TEMPLATE/
+│   └── pull_request_template.md
 ├── PKGBUILD                        # Arch package build script
-├── CONTRIBUTING.md                 # Contribution guidelines
+├── .editorconfig                   # Editor configuration
 ├── CHANGELOG.md                    # Version history
-└── README.md                       # This file
+├── CONTRIBUTING.md                 # Contribution guidelines
+├── README.md                       # This file
+├── SECURITY.md                     # Security policy
+└── SUPPORT.md                      # Support and help
 
 Installation Layout:
 /usr/lib/eirikr/
@@ -372,9 +381,15 @@ See `LICENSE` file for full details: https://www.gnu.org/licenses/gpl-3.0.html
 
 ## Support
 
-- **Issues**: Report bugs via GitHub issues
-- **Documentation**: See included .md files
+Need help? Check out our comprehensive support resources:
+
+- **[SUPPORT.md](SUPPORT.md)** — Complete troubleshooting guide and FAQ
+- **[GitHub Issues](https://github.com/Oichkatzelesfrettschen/asus-b550-config/issues)** — Report bugs and request features
+- **[GitHub Discussions](https://github.com/Oichkatzelesfrettschen/asus-b550-config/discussions)** — Ask questions and share ideas
+- **Documentation** — See [docs/](docs/) for technical references
 - **Kernel docs**: https://docs.kernel.org/6.0/hwmon/nct6775.html
+
+For security vulnerabilities, please see [SECURITY.md](SECURITY.md) for responsible disclosure.
 
 ## References
 
