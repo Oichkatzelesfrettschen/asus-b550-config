@@ -4,7 +4,7 @@ pkg/
 *.pkg.tar*
 *.tar.gz
 *.tar.bz2
-*.tar.xz
+*.tar.xx
 *.tar.zst
 
 # Build intermediates
@@ -13,6 +13,7 @@ pkg/
 *.a
 *.dylib
 *.out
+nct-id
 
 # IDE and editor files
 .vscode/
@@ -25,6 +26,7 @@ pkg/
 .project
 .settings/
 *.sublime-workspace
+*.sublime-project
 
 # Local configuration (secrets, tokens)
 .env
@@ -34,3 +36,18 @@ credentials.json
 
 # Generated files
 .makepkg/
+
+# Temporary files
+/tmp/
+*.tmp
+*.bak
+*.orig
+
+# Log files
+*.log
+
+# OS-specific
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
