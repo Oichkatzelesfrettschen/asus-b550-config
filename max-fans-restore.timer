@@ -1,0 +1,23 @@
+[Unit]
+Description=Trigger fan settings restore on resume
+Documentation=file:///usr/share/doc/eirikr-asus-b550-config/
+Wants=max-fans-restore.service
+
+[Timer]
+# PURPOSE: Ensure fan settings are reapplied on wake from suspend/hibernate
+# WHY: Firmware may reset hwmon state during power transitions
+# DECISION: Timer runs service after resume and every boot
+
+# Run after system resume/wakeup
+Unit=max-fans-restore.service
+
+# Also run periodically (every 30 minutes) as additional safeguard
+OnUnitActiveSec=30min
+
+# Run immediately on boot
+OnBootSec=5s
+
+Persistent=yes
+
+[Install]
+WantedBy=timers.target

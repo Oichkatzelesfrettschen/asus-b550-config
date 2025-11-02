@@ -1,0 +1,32 @@
+[Unit]
+Description=Restore NCT6798D Fan Control Settings
+Documentation=file:///usr/share/doc/eirikr-asus-b550-config/
+After=network.target
+Wants=max-fans-restore.timer
+
+[Service]
+# PURPOSE: Reapply SmartFan IV and other sysfs settings after boot/resume
+# WHY: Firmware/BIOS or kernel resets may revert hwmon settings
+# DECISION: systemd service automatically run on boot and resume
+#
+# This service applies a "saved" configuration (can be manually created)
+# Example /usr/local/etc/max-fans-restore.conf:
+#   # 7-point SmartFan IV curves
+#   /usr/lib/eirikr/max-fans-advanced.sh --smartfan-7pt
+#
+#   # Dual-sensor weighting on pwm2
+#   /usr/lib/eirikr/max-fans-advanced.sh --dual-sensor 2 --primary 2 --secondary 5
+#
+#   # Electrical mode for specific headers
+#   /usr/lib/eirikr/max-fans-advanced.sh --electrical-mode 3 --dc
+#
+# To enable: Create /usr/local/etc/max-fans-restore.conf with your settings
+
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/bin/bash -c 'if [ -f /usr/local/etc/max-fans-restore.conf ]; then source /usr/local/etc/max-fans-restore.conf; fi'
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

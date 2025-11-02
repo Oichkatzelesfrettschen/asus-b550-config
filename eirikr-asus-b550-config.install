@@ -1,0 +1,101 @@
+post_install() {
+  cat << 'EOF'
+
+====================================================================
+eirikr-asus-b550-config: ASUS B550 Configuration Installed
+====================================================================
+
+Changes applied:
+
+1. Hwmon Permissions (udev rules)
+   - /usr/lib/udev/rules.d/50-asus-hwmon-permissions.rules
+   - Grants read/write permissions on NCT6798D pwm devices
+   - Fixes: max-fans.service Permission denied errors
+
+2. Max Fans Service
+   - /usr/lib/systemd/system/max-fans.service
+   - Automatically sets all fans to maximum on boot
+   - Ensures aggressive cooling for gaming/heavy loads
+
+3. NCT6798D Kernel Module Configuration
+   - /etc/modprobe.d/nct6798d.conf
+   - Optimizes hardware monitor sensor operation
+
+4. SATA Device Rules
+   - /usr/lib/udev/rules.d/90-asus-sata.rules
+   - Tags SATA devices for special handling
+   - Note: SATA resume failures require BIOS update
+
+====================================================================
+Verification:
+====================================================================
+
+Check that max-fans.service works:
+  sudo systemctl status max-fans.service
+  Expected: Active (exited) since boot
+
+Check hwmon permissions:
+  ls -la /sys/class/hwmon/hwmon7/pwm*
+  Expected: -rw-r--r-- (readable/writable)
+
+Check sensor readings:
+  sensors
+  Should display NCT6798D data with temperature, fan, voltage info
+
+====================================================================
+Next Steps (Optional):
+====================================================================
+
+1. Install lm_sensors for hwmon support:
+   pacman -S lm_sensors
+
+2. Configure sensors:
+   sudo sensors-detect
+   sudo systemctl restart lm_sensors
+
+3. Adjust fan curve (advanced):
+   Edit /etc/modprobe.d/nct6798d.conf
+   Reload: sudo modprobe -r nct6798 && sudo modprobe nct6798
+
+4. View detailed fan info:
+   pwmconfig
+   fancontrol (if you want automatic fan control)
+
+====================================================================
+SATA Resume Failures (ata5/ata6):
+====================================================================
+
+If you see in dmesg:
+  "ata5: failed to resume link (SControl 0)"
+  "ata6: failed to resume link (SControl 0)"
+
+This is a known ASUS B550 BIOS issue. Workarounds:
+  1. Update BIOS to latest version
+  2. Try disabling SATA link power management in BIOS
+  3. Monitor with: dmesg | grep -i ata
+
+This package cannot fix BIOS issues, but you can check:
+  cat /proc/cmdline | grep -o "libata\.[^ ]*"
+
+====================================================================
+
+EOF
+
+  # Reload udev rules immediately
+  if command -v udevadm &>/dev/null; then
+    echo "INFO: Reloading udev rules..."
+    udevadm control --reload-rules 2>&1 || true
+    udevadm trigger --type=devices --action=change 2>&1 || true
+  fi
+
+  echo "INFO: Enable max-fans service: sudo systemctl enable max-fans.service"
+}
+
+post_upgrade() {
+  post_install "$1"
+}
+
+post_remove() {
+  echo "INFO: ASUS B550 configuration removed"
+  echo "INFO: Fan control reverts to BIOS defaults"
+}

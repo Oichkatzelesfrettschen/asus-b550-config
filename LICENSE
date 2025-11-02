@@ -1,0 +1,69 @@
+Creative Commons Zero v1.0 Universal (CC0 1.0)
+
+This work is placed in the public domain.
+
+To the extent possible under law, the author has waived all copyright and
+related or neighboring rights to this work. This work is published from:
+United States.
+
+No warranty of any kind is provided.
+
+See https://creativecommons.org/publicdomain/zero/1.0/ for full details.
+
+================================================================================
+SUMMARY
+================================================================================
+
+You are free to:
+  - Use this software for any purpose
+  - Modify and distribute without restriction
+  - Include in commercial products
+  - Share as-is without attribution
+
+You must not:
+  - Hold the author liable for any damages
+  - Claim warranty of any kind
+
+================================================================================
+AUTHOR AND CONTACT
+================================================================================
+
+Author: Oaich (ericj on CachyOS)
+Email: [contact info in repository or documentation]
+Repository: https://github.com/oaich/asus-b550-config
+License: CC0 1.0 Universal (Public Domain)
+
+================================================================================
+WHAT THIS MEANS FOR YOU
+================================================================================
+
+This package contains:
+  - Shell scripts for fan control
+  - Systemd service/timer units
+  - Udev rules
+  - Kernel module configuration
+  - Technical documentation
+
+All of the above are placed in the public domain. You may use, modify, and
+distribute them freely without asking permission or providing attribution.
+
+If you find this software useful, please:
+  1. Star the repository if using GitHub
+  2. Contribute improvements via pull requests
+  3. Report bugs and issues
+  4. Share feedback
+
+Your contributions improve the project for everyone.
+
+================================================================================
+THE PUBLIC DOMAIN DEDICATION
+================================================================================
+
+The author of this software (Oaich) hereby relinquishes all rights to it,
+placing it squarely in the public domain for the benefit of all users.
+
+No warranty. No restrictions. Complete freedom.
+
+This is the philosophy of open-source: knowledge should be free.
+
+================================================================================

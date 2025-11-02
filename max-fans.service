@@ -1,0 +1,14 @@
+[Unit]
+Description=Set all fans to maximum speed (ASUS B550 NCT6798D)
+Documentation=man:sensors(1)
+After=local-fs.target
+Before=multi-user.target
+
+[Service]
+Type=oneshot
+User=root
+ExecStart=/usr/lib/eirikr/max-fans.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

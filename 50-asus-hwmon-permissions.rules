@@ -1,0 +1,28 @@
+# ASUS B550 Hardware Monitor Permissions
+# Allows root services like max-fans.service to access hwmon pwm devices
+# Fixes: max-fans.service Permission denied on /sys/class/hwmon/hwmonX/pwmX_*
+
+# Grant read/write permissions on hwmon pwm devices
+# Typically /sys/class/hwmon/hwmon7/ on ASUS B550 with NCT6798D
+KERNEL=="hwmon[0-9]*", SUBSYSTEM=="hwmon", MODE="0755"
+
+# Grant read/write on pwm files specifically
+KERNEL=="pwm[0-9]*", SUBSYSTEM=="hwmon", MODE="0664"
+
+# Grant read/write on pwm_enable files
+KERNEL=="pwm[0-9]*_enable", SUBSYSTEM=="hwmon", MODE="0664"
+
+# Grant read/write on pwm floor and stop_time parameters
+KERNEL=="pwm[0-9]*_floor", SUBSYSTEM=="hwmon", MODE="0664"
+KERNEL=="pwm[0-9]*_stop_time", SUBSYSTEM=="hwmon", MODE="0664"
+
+# Grant read/write on temperature sensors
+KERNEL=="temp[0-9]*_input", SUBSYSTEM=="hwmon", MODE="0444"
+KERNEL=="temp[0-9]*_max", SUBSYSTEM=="hwmon", MODE="0644"
+
+# Grant read/write on voltage sensors
+KERNEL=="in[0-9]*_input", SUBSYSTEM=="hwmon", MODE="0444"
+KERNEL=="in[0-9]*_max", SUBSYSTEM=="hwmon", MODE="0644"
+
+# Grant read/write on fan speed sensors
+KERNEL=="fan[0-9]*_input", SUBSYSTEM=="hwmon", MODE="0444"

@@ -1,0 +1,14 @@
+# ASUS B550 SATA Device Rules
+# Configures SATA device parameters for better compatibility
+#
+# Note: SATA resume failures (ata5/ata6) are typically BIOS-related
+# and may require BIOS update. These rules provide workarounds.
+
+# Match ASUS B550 SATA controllers (AHCI mode)
+SUBSYSTEM=="ata_port", KERNEL=="ata*", \
+  ENV{ID_MODEL_FROM_DATABASE}=="*SATA*", \
+  TAG+="asus_sata"
+
+# Additional device tuning for maximum compatibility
+SUBSYSTEM=="host_sas", TAG+="asus_sata"
+SUBSYSTEM=="scsi_host", TAG+="asus_sata"

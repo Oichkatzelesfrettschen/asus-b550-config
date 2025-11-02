@@ -1,0 +1,36 @@
+# Arch PKGBUILD build artifacts
+src/
+pkg/
+*.pkg.tar*
+*.tar.gz
+*.tar.bz2
+*.tar.xz
+*.tar.zst
+
+# Build intermediates
+*.o
+*.so
+*.a
+*.dylib
+*.out
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+.classpath
+.project
+.settings/
+*.sublime-workspace
+
+# Local configuration (secrets, tokens)
+.env
+.env.local
+.env.*.local
+credentials.json
+
+# Generated files
+.makepkg/
