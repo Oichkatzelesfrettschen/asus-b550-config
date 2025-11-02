@@ -3,7 +3,7 @@
 **Version**: 2.0 (Advanced Features)
 **Date**: November 1, 2025
 **Script**: `max-fans-advanced.sh`
-**Kernel Documentation**: https://docs.kernel.org/6.0/hwmon/nct6775.html
+**Kernel Documentation**: <https://docs.kernel.org/6.0/hwmon/nct6775.html>
 
 ---
 
@@ -49,6 +49,7 @@ echo 180 | sudo tee /sys/class/hwmon/hwmon2/pwm1
 **Registers**: pwmX_target_temp, pwmX_temp_tolerance, pwmX_start, pwmX_floor, pwmX_step_{up,down}_time
 
 **How It Works**:
+
 ```
 Temperature sensor reading (input):
     ↓
@@ -79,13 +80,14 @@ echo 1000 | sudo tee /sys/class/hwmon/hwmon2/pwm1_step_down_time     # 1000ms to
 
 ---
 
-### 1.3 SmartFan IV (mode=5) — Now 7 Points!
+### 1.3 SmartFan IV (mode=5) — Now 7 Points
 
 **What**: Multi-point temperature curve; hardware transitions between points
 **When**: Variable workload, good balance of responsiveness + acoustic control
 **Registers**: pwmX_auto_point[1-7]_{temp,pwm}, pwmX_step_{up,down}_time, pwmX_stop_time
 
 **Original Design (5 points)**:
+
 - 40°C → PWM 64
 - 50°C → PWM 96
 - 60°C → PWM 128
@@ -93,6 +95,7 @@ echo 1000 | sudo tee /sys/class/hwmon/hwmon2/pwm1_step_down_time     # 1000ms to
 - 80°C → PWM 255
 
 **Enhanced Design (7 points, finer granularity)**:
+
 - 40°C → PWM 64 (25%, idle)
 - 50°C → PWM 96 (38%)
 - 60°C → PWM 128 (50%)
@@ -126,6 +129,7 @@ sudo ./max-fans-advanced.sh --smartfan-7pt --timing 800 1200 3000
 ```
 
 **What those timing values mean**:
+
 - `800` ms = wait 800ms before increasing PWM (ramps up gradually)
 - `1200` ms = wait 1200ms before decreasing PWM (prevents oscillation)
 - `3000` ms = wait 3000ms below lowest point before stopping fan
@@ -141,6 +145,7 @@ sudo ./max-fans-advanced.sh --smartfan-7pt --timing 800 1200 3000
 **Registers**: fanX_target, fanX_tolerance
 
 **Caveat**: Labeled "use at your own risk" in upstream docs. Only works if:
+
 1. Tachometry is correctly calibrated (fanX_pulses set to your fan's PPR)
 2. Fan RPM is accurately reported
 3. Control loop is stable on your specific hardware
@@ -160,6 +165,7 @@ echo 500 | sudo tee /sys/class/hwmon/hwmon2/fan1_tolerance        # ±500 RPM to
 ## Part 2: Advanced Capability #1 — Dual-Sensor Weighting
 
 **Problem**: A single temperature input doesn't capture the full thermal picture.
+
 - CPU fans should track CPU temp, but also "look at" VRM heat
 - Case fans should track both chipset and case ambient
 - No userspace daemon → no polling overhead
@@ -179,6 +185,7 @@ PWM output
 ```
 
 **Registers**:
+
 - `pwmX_weight_temp_sel` — Choose secondary sensor (1-13)
 - `pwmX_weight_temp_step` — How much secondary influences the curve
 - `pwmX_weight_temp_step_base` — Base temperature for secondary influence
@@ -194,6 +201,7 @@ sudo ./max-fans-advanced.sh --dual-sensor 2 --primary 2 --secondary 5
 ```
 
 This:
+
 1. Selects temp5 (VRM) as secondary input
 2. Sets influence parameters so if VRM heats up, pwm2 increases even if CPU temp is stable
 3. Keeps primary temp (CPU) as the dominant signal
@@ -205,6 +213,7 @@ This:
 ## Part 3: Advanced Capability #2 — Electrical Mode Selection
 
 **Problem**: Some fan headers are wired for DC output; others for PWM.
+
 - 3-pin (legacy) fans often need DC mode
 - 4-pin (PWM) fans typically need PWM mode
 - Mismatch = curve appears broken (fan doesn't respond to PWM changes)
@@ -229,11 +238,13 @@ sudo ./max-fans-advanced.sh --electrical-mode 3 --dc
 ## Part 4: Advanced Capability #3 — Tachometry Calibration
 
 **Problem**: RPM reporting is wrong if the driver doesn't know fan's pulses-per-rev (PPR).
+
 - Most fans: 2 PPR (two pulses per revolution)
 - High-end gaming fans: 4 PPR
 - Rare: 1, 3, 5, or 8 PPR
 
 **Impact**: If PPR is wrong:
+
 - RPM reads 2× or 0.5× actual
 - Speed Cruise doesn't work
 - RPM alarms trigger incorrectly
@@ -248,6 +259,7 @@ sudo ./max-fans-advanced.sh --tachometry 1 --pulses 4
 ```
 
 **Verify**: Check `/sys/class/hwmon/hwmon2/fan1_input` before and after.
+
 - Should now report accurate RPM
 
 **Decision**: Check your fan spec. Default to 2; adjust if RPM seems wrong by factor of 2.
@@ -330,6 +342,7 @@ journalctl -u max-fans-restore.service
 Scenario: Gaming workstation with custom thermal control.
 
 **Goals**:
+
 1. Aggressive CPU cooling (7-point curve, tight tolerance)
 2. VRM fan responds to both chipset and VRM temp
 3. Case fans run in Thermal Cruise (quiet when idle)
@@ -392,6 +405,7 @@ pacman -Q eirikr-asus-b550-config
 ### Issue: SmartFan IV enabled but fans don't respond to temperature
 
 **Common causes**:
+
 1. **Electrical mode mismatch** — Check `pwmX_mode` (0=DC, 1=PWM) vs header type
 2. **Wrong temperature sensor** — Verify `pwmX_temp_sel` points to live sensor
 3. **Firmware reset** — Settings lost on boot (enable persistence layer)
@@ -490,4 +504,4 @@ to see all available sensors.
 
 **Document Version**: 2.0
 **Last Updated**: November 1, 2025
-**References**: [1] https://docs.kernel.org/6.0/hwmon/nct6775.html
+**References**: [1] <https://docs.kernel.org/6.0/hwmon/nct6775.html>

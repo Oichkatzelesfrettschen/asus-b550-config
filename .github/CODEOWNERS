@@ -1,0 +1,31 @@
+# Code Owners for asus-b550-config
+# https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# Default owner for everything in the repository
+* @Oichkatzelesfrettschen
+
+# Documentation
+/docs/ @Oichkatzelesfrettschen
+*.md @Oichkatzelesfrettschen
+/examples/ @Oichkatzelesfrettschen
+
+# Scripts and code
+/scripts/ @Oichkatzelesfrettschen
+*.sh @Oichkatzelesfrettschen
+*.c @Oichkatzelesfrettschen
+
+# CI/CD and automation (require extra scrutiny)
+/.github/ @Oichkatzelesfrettschen
+/.github/workflows/ @Oichkatzelesfrettschen
+.pre-commit-config.yaml @Oichkatzelesfrettschen
+
+# Configuration files
+/systemd/ @Oichkatzelesfrettschen
+/udev/ @Oichkatzelesfrettschen
+/etc/ @Oichkatzelesfrettschen
+PKGBUILD @Oichkatzelesfrettschen
+
+# Security-sensitive files (require mandatory review)
+SECURITY.md @Oichkatzelesfrettschen
+/.github/workflows/security.yml @Oichkatzelesfrettschen
+/.github/dependabot.yml @Oichkatzelesfrettschen

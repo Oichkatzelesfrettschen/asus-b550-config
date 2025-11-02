@@ -102,7 +102,6 @@ set -o pipefail
 ################################################################################
 
 readonly HWMON_PATH="/sys/class/hwmon"
-readonly SCRIPT_NAME="$(basename "$0")"
 
 # Default 7-point SmartFan IV curve (conservative, gradual ramp)
 # DECISION: Wider spacing for acoustic comfort + thermal safety
@@ -477,7 +476,9 @@ verify_and_report() {
 	for pwm in {1..6}; do
 		local enable_file="$hwmon/pwm${pwm}_enable"
 		if [ -f "$enable_file" ]; then
-			local enable=$(cat "$enable_file" 2>/dev/null)
+			local enable
+			local pwm_val
+			enable=$(cat "$enable_file" 2>/dev/null)
 			local mode_name
 			case "$enable" in
 				0) mode_name="disabled" ;;
@@ -488,7 +489,7 @@ verify_and_report() {
 				*) mode_name="unknown($enable)" ;;
 			esac
 
-			local pwm_val=$(cat "$hwmon/pwm${pwm}" 2>/dev/null)
+			pwm_val=$(cat "$hwmon/pwm${pwm}" 2>/dev/null)
 			log_info "  pwm${pwm}: ${pwm_val}/255 (mode=$enable, $mode_name)"
 		fi
 	done
@@ -498,7 +499,8 @@ verify_and_report() {
 	local have_secondary=0
 	for temp in {1..13}; do
 		if [ -f "$hwmon/temp${temp}_label" ]; then
-			local label=$(cat "$hwmon/temp${temp}_label")
+			local label
+			label=$(cat "$hwmon/temp${temp}_label")
 			log_info "  temp${temp}: $label"
 			have_secondary=1
 		fi
@@ -509,7 +511,8 @@ verify_and_report() {
 	log_info "Electrical Modes (DC=0, PWM=1):"
 	for pwm in {1..6}; do
 		if [ -f "$hwmon/pwm${pwm}_mode" ]; then
-			local mode=$(cat "$hwmon/pwm${pwm}_mode" 2>/dev/null)
+			local mode
+			mode=$(cat "$hwmon/pwm${pwm}_mode" 2>/dev/null)
 			log_info "  pwm${pwm}_mode: $mode"
 		fi
 	done
@@ -518,7 +521,8 @@ verify_and_report() {
 	log_info "Tachometry (pulses per rev):"
 	for fan in {1..6}; do
 		if [ -f "$hwmon/fan${fan}_pulses" ]; then
-			local ppr=$(cat "$hwmon/fan${fan}_pulses" 2>/dev/null)
+			local ppr
+			ppr=$(cat "$hwmon/fan${fan}_pulses" 2>/dev/null)
 			log_info "  fan${fan}_pulses: $ppr"
 		fi
 	done

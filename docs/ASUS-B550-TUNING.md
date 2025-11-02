@@ -7,6 +7,7 @@ This package provides complete hardware monitoring and fan control configuration
 **Chipset**: ASUS B550
 **Super I/O**: Nuvoton NCT6798D
 **Sensors**:
+
 - 6x Temperature sensors
 - 6x Voltage sensors
 - 6x Fan/PWM channels (pwm1-pwm6)
@@ -14,7 +15,9 @@ This package provides complete hardware monitoring and fan control configuration
 ## Issues Fixed
 
 ### 1. Max Fans Service Permission Denied
+
 **Before**:
+
 ```
 Oct 31 09:33:48 x570-5600X3D bash[764]: /bin/bash: line 1: /sys/class/hwmon/hwmon7/pwm5: Permission denied
 ```
@@ -22,36 +25,44 @@ Oct 31 09:33:48 x570-5600X3D bash[764]: /bin/bash: line 1: /sys/class/hwmon/hwmo
 **After**: Udev rules grant proper permissions, service starts successfully
 
 ### 2. Hardware Monitor Not Accessible
+
 **Before**: `/sys/class/hwmon/` files owned by root:root with mode 644
 **After**: Mode 664 (group/world readable), root writable
 
 ## Configuration Files
 
 ### Udev Rules: 50-asus-hwmon-permissions.rules
+
 Grants read/write access to hwmon devices:
+
 - `hwmon*` directories: mode 755
 - `pwm*` files: mode 664
 - Temperature/voltage sensors: mode 444/644
 
 ### Service: max-fans.service
+
 - Type: oneshot
 - Runs: `/usr/lib/eirikr/max-fans.sh`
 - Sets all pwm[1-6] to 255 (maximum)
 - Enables aggressive cooling
 
 ### Module Config: modprobe-nct6798d.conf
+
 Default sensor configuration:
+
 - `pwm_mode=0`: PWM mode (vs voltage mode)
 - Optional: `disable_power_saving=1` if sensors become unreliable
 
 ## Usage
 
 ### Installation
+
 ```bash
 sudo pacman -U eirikr-asus-b550-config-*.pkg.tar.*
 ```
 
 ### Enable Services
+
 ```bash
 sudo systemctl daemon-reload
 sudo systemctl enable max-fans.service
@@ -59,6 +70,7 @@ sudo systemctl start max-fans.service
 ```
 
 ### Monitor Sensors
+
 ```bash
 # Quick view
 sensors | grep -A 20 NCT6798
@@ -71,6 +83,7 @@ watch -n 1 sensors
 ```
 
 ### Test Fan Control
+
 ```bash
 # Check current PWM value (0-255)
 cat /sys/class/hwmon/hwmon7/pwm1
@@ -82,7 +95,9 @@ echo 255 | sudo tee /sys/class/hwmon/hwmon*/pwm*
 ## Troubleshooting
 
 ### hwmon7 Device Not Found
+
 Some systems may have different hwmon numbering. Find yours:
+
 ```bash
 for hwmon in /sys/class/hwmon/hwmon*; do
   echo "$(cat "$hwmon/name"): $hwmon"
@@ -90,6 +105,7 @@ done
 ```
 
 Expected output:
+
 ```
 coretemp: /sys/class/hwmon/hwmon0
 ...
@@ -97,7 +113,9 @@ nct6798: /sys/class/hwmon/hwmon7   <-- This one
 ```
 
 ### PWM Files Don't Exist
+
 NCT6798D driver may need enabling:
+
 ```bash
 # Check if module is loaded
 lsmod | grep nct6798
@@ -108,6 +126,7 @@ sudo modprobe nct6798
 ```
 
 ### Sensors Daemon Not Running
+
 ```bash
 # Install if needed
 sudo pacman -S lm_sensors
@@ -123,12 +142,15 @@ sensors
 ```
 
 ### Max Fans Service Fails
+
 Check journal for errors:
+
 ```bash
 sudo journalctl -u max-fans.service -n 20
 ```
 
 Common issues:
+
 1. Udev rules not applied: run `sudo udevadm control --reload-rules`
 2. Wrong hwmon path: verify with `sensors`
 3. Device permissions: check with `ls -la /sys/class/hwmon/hwmon7/`
@@ -136,6 +158,7 @@ Common issues:
 ## Advanced: Manual Fan Curve Control
 
 For fine-grained control, install `fancontrol`:
+
 ```bash
 sudo pacman -S lm_sensors
 sudo pwmconfig     # Interactive setup
@@ -147,6 +170,7 @@ This will create `/etc/fancontrol` with custom curves.
 ## SATA Resume Issues
 
 **Known Problem**: ASUS B550 sometimes fails to resume SATA drives from suspend
+
 ```
 Oct 31 09:33:47 kernel: ata5: failed to resume link (SControl 0)
 Oct 31 09:33:47 kernel: ata6: failed to resume link (SControl 0)
@@ -155,11 +179,13 @@ Oct 31 09:33:47 kernel: ata6: failed to resume link (SControl 0)
 **Root Cause**: ACPI firmware bug in some BIOS versions
 
 **Workarounds**:
+
 1. Update BIOS to latest version
 2. Disable "Link Power Management" in BIOS
 3. Use kernel parameter: `libata.force=noncq` (disables NCQ, slower)
 
 **Monitor Resume**:
+
 ```bash
 # Check if drives resume correctly
 lsblk -d   # After resume, all drives should be present
@@ -218,10 +244,12 @@ This configuration package is licensed under the Creative Commons 0 (Public Doma
 ## Support
 
 For issues specific to ASUS B550:
+
 - Check ASUS support site for BIOS updates
 - Review lm_sensors documentation
 - Consult Linux Kernel hwmon documentation
 
 For package issues:
+
 - File issue with configuration details
 - Provide output of: `sensors`, `lsmod`, `dmesg | grep -iE "nct6798|ata"`

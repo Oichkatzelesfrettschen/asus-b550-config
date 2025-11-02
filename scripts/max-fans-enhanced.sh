@@ -71,7 +71,8 @@ set -o pipefail
 
 readonly HWMON_PATH="/sys/class/hwmon"
 readonly DEFAULT_PWM=255
-readonly SCRIPT_NAME="$(basename "$0")"
+SCRIPT_NAME="$(basename "$0")"
+readonly SCRIPT_NAME
 
 # SmartFan IV curve defaults (5 setpoints per Nuvoton 679x design)
 # DECISION: Conservative curve (ramp gradually with temperature)
@@ -156,8 +157,10 @@ verify_nct6798d() {
 			for temp_file in "$hwmon_dir"/temp*_input; do
 				if [[ -f "$temp_file" ]]; then
 					temp_count=$((temp_count + 1))
-					local temp_label=$(cat "$hwmon_dir/temp${temp_count}_label" 2>/dev/null || echo "Temp $temp_count")
-					local temp_val=$(cat "$temp_file" 2>/dev/null || echo "?")
+					local temp_label
+					local temp_val
+					temp_label=$(cat "$hwmon_dir/temp${temp_count}_label" 2>/dev/null || echo "Temp $temp_count")
+					temp_val=$(cat "$temp_file" 2>/dev/null || echo "?")
 					log_info "    $temp_label: $((temp_val / 1000))°C (raw: ${temp_val})"
 				fi
 			done
@@ -167,8 +170,10 @@ verify_nct6798d() {
 			for pwm_file in "$hwmon_dir"/pwm[0-9]; do
 				if [[ -f "$pwm_file" ]]; then
 					pwm_count=$((pwm_count + 1))
-					local pwm_val=$(cat "$pwm_file" 2>/dev/null || echo "?")
-					local pwm_enable=$(cat "$hwmon_dir/pwm${pwm_count}_enable" 2>/dev/null || echo "?")
+					local pwm_val
+					local pwm_enable
+					pwm_val=$(cat "$pwm_file" 2>/dev/null || echo "?")
+					pwm_enable=$(cat "$hwmon_dir/pwm${pwm_count}_enable" 2>/dev/null || echo "?")
 					# decode enable: 0=disabled, 1=manual, 2=pwm, 4=temp, 5=SmartFan IV
 					log_info "    PWM$pwm_count: $pwm_val/255 (enable=$pwm_enable)"
 				fi
@@ -277,7 +282,8 @@ set_fan_smartfan_iv() {
 		[[ ! -f "$pwm_file" ]] && continue
 
 		pwm_count=$((pwm_count + 1))
-		local pwm_base=$(basename "$pwm_file")
+		local pwm_base
+		pwm_base=$(basename "$pwm_file")
 
 		log_info "Configuring $pwm_base with SmartFan IV curve..."
 
