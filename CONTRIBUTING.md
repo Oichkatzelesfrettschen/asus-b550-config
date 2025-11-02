@@ -30,6 +30,30 @@ This project follows standard open-source community guidelines:
 - Development tools: `gcc`, `shellcheck`, `namcap`
 - Testing tools: `lm_sensors`, `systemd`
 
+### Optional: Pre-commit Hooks
+
+Install pre-commit hooks for automatic validation before commits:
+
+```bash
+# Install pre-commit
+pip install pre-commit
+
+# Install hooks
+pre-commit install
+
+# Run manually on all files
+pre-commit run --all-files
+```
+
+Pre-commit hooks will automatically run:
+- ShellCheck on shell scripts
+- Markdownlint on markdown files
+- EditorConfig validation
+- YAML linting
+- Secret detection
+
+See `.pre-commit-config.yaml` for configuration details.
+
 ### Repository Structure
 
 ```

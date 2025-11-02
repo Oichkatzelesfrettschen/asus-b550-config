@@ -9,6 +9,8 @@
 [![Documentation](https://github.com/Oichkatzelesfrettschen/asus-b550-config/actions/workflows/documentation.yml/badge.svg)](https://github.com/Oichkatzelesfrettschen/asus-b550-config/actions/workflows/documentation.yml)
 [![Security](https://github.com/Oichkatzelesfrettschen/asus-b550-config/actions/workflows/security.yml/badge.svg)](https://github.com/Oichkatzelesfrettschen/asus-b550-config/actions/workflows/security.yml)
 
+> **CI/CD Status**: All checks automated • [View Workflows](.github/workflows/) • [CI/CD Docs](.github/CI-CD.md)
+
 Maximal on-chip fan control for ASUS ROG STRIX B550-F GAMING WIFI motherboards using the Nuvoton NCT6798D Super I/O chip.
 
 **Status**: Production-ready (v1.3.0)
