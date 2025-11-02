@@ -1,0 +1,95 @@
+#!/bin/bash
+#
+# Example configuration for max-fans-restore.service
+# Location: /usr/local/etc/max-fans-restore.conf
+#
+# This file is sourced by max-fans-restore.service on boot and after resume
+# to reapply custom fan control settings that may be reset by firmware/BIOS.
+#
+# USAGE:
+#   1. Copy this file to /usr/local/etc/max-fans-restore.conf
+#   2. Uncomment and customize the settings below
+#   3. Enable the service: sudo systemctl enable max-fans-restore.timer
+#   4. Start the timer: sudo systemctl start max-fans-restore.timer
+#
+
+# ------------------------------------------------------------------------------
+# Example 1: 7-point SmartFan IV with smooth ramps
+# ------------------------------------------------------------------------------
+# Installs temperature-based fan curves with configurable ramp timing
+# - step_up_time: milliseconds between PWM increases (800ms default)
+# - step_down_time: milliseconds between PWM decreases (1200ms default)
+# - stop_time: milliseconds fan must be at minimum before stopping (3000ms default)
+
+/usr/lib/eirikr/max-fans-advanced.sh --smartfan-7pt --timing 800 1200 3000
+
+# ------------------------------------------------------------------------------
+# Example 2: Dual-sensor weighting (CPU + VRM temperature blending)
+# ------------------------------------------------------------------------------
+# Blend two temperature sensors to control a single fan
+# Useful for cases like: CPU fan should respond to both CPU and VRM temps
+# 
+# Parameters:
+# - pwm number (1-6): which fan to control
+# - --primary N: primary temperature sensor (temp1-temp6)
+# - --secondary N: secondary temperature sensor (temp1-temp6)
+
+# /usr/lib/eirikr/max-fans-advanced.sh --dual-sensor 2 --primary 2 --secondary 5
+
+# ------------------------------------------------------------------------------
+# Example 3: Thermal Cruise (constant temperature mode)
+# ------------------------------------------------------------------------------
+# Hardware maintains a target temperature automatically
+# Good for quiet operation with steady workloads
+#
+# Parameters:
+# - pwm number (1-6): which fan to control
+# - --target: target temperature in millidegrees Celsius (e.g., 50000 = 50°C)
+# - --tolerance: temperature tolerance in millidegrees Celsius (e.g., 5000 = ±5°C)
+
+# /usr/lib/eirikr/max-fans-advanced.sh --thermal-cruise 1 --target 50000 --tolerance 5000
+
+# ------------------------------------------------------------------------------
+# Example 4: Electrical mode switching (DC vs PWM)
+# ------------------------------------------------------------------------------
+# Switch fan header between DC mode (3-pin fans) and PWM mode (4-pin fans)
+# Only use if you know your fan type - incorrect mode can damage fans
+#
+# Parameters:
+# - pwm number (1-6): which fan header to configure
+# - --dc: DC mode (for 3-pin fans)
+# - --pwm: PWM mode (for 4-pin fans, default)
+
+# /usr/lib/eirikr/max-fans-advanced.sh --electrical-mode 3 --dc
+
+# ------------------------------------------------------------------------------
+# Example 5: Tachometry calibration (accurate RPM readings)
+# ------------------------------------------------------------------------------
+# Calibrate the pulses-per-revolution (PPR) for accurate fan speed readings
+# Check your fan specifications for the correct PPR value
+#
+# Common values:
+# - 2 PPR: Most standard fans (default)
+# - 4 PPR: High-end fans (e.g., Noctua industrial)
+#
+# Parameters:
+# - pwm number (1-6): which fan to calibrate
+# - --pulses N: pulses per revolution (1, 2, 3, 4, 5, or 8)
+
+# /usr/lib/eirikr/max-fans-advanced.sh --tachometry 1 --pulses 4
+
+# ------------------------------------------------------------------------------
+# Example 6: Enable kernel debounce (reduce tach signal noise)
+# ------------------------------------------------------------------------------
+# Enable chip-level debounce filtering for cleaner tachometer readings
+# Useful if you see erratic RPM readings or fan speed fluctuations
+
+# /usr/lib/eirikr/max-fans-advanced.sh --debounce-enable
+
+# ------------------------------------------------------------------------------
+# Verification
+# ------------------------------------------------------------------------------
+# Uncomment to verify settings were applied correctly after restore
+# This will log current hwmon state to journal (viewable with journalctl)
+
+# /usr/lib/eirikr/max-fans-advanced.sh --verify
