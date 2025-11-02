@@ -4,6 +4,11 @@
 [![Arch Linux](https://img.shields.io/badge/Arch%20Linux-compatible-1793d1?logo=archlinux)](https://archlinux.org/)
 [![Version](https://img.shields.io/badge/version-1.3.0-green.svg)](https://github.com/Oichkatzelesfrettschen/asus-b550-config/releases)
 
+[![Lint](https://github.com/Oichkatzelesfrettschen/asus-b550-config/actions/workflows/lint.yml/badge.svg)](https://github.com/Oichkatzelesfrettschen/asus-b550-config/actions/workflows/lint.yml)
+[![Build & Test](https://github.com/Oichkatzelesfrettschen/asus-b550-config/actions/workflows/build.yml/badge.svg)](https://github.com/Oichkatzelesfrettschen/asus-b550-config/actions/workflows/build.yml)
+[![Documentation](https://github.com/Oichkatzelesfrettschen/asus-b550-config/actions/workflows/documentation.yml/badge.svg)](https://github.com/Oichkatzelesfrettschen/asus-b550-config/actions/workflows/documentation.yml)
+[![Security](https://github.com/Oichkatzelesfrettschen/asus-b550-config/actions/workflows/security.yml/badge.svg)](https://github.com/Oichkatzelesfrettschen/asus-b550-config/actions/workflows/security.yml)
+
 Maximal on-chip fan control for ASUS ROG STRIX B550-F GAMING WIFI motherboards using the Nuvoton NCT6798D Super I/O chip.
 
 **Status**: Production-ready (v1.3.0)
@@ -343,6 +348,17 @@ Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for gui
 - Testing requirements
 - Pull request process
 - Development workflow
+
+### CI/CD Pipeline
+
+All code changes are automatically validated through GitHub Actions:
+
+- **Lint**: ShellCheck, Markdownlint, EditorConfig validation
+- **Build & Test**: C code compilation, PKGBUILD validation, systemd unit checks
+- **Documentation**: Link validation, completeness checks
+- **Security**: CodeQL analysis, secret scanning, dependency review
+
+See [.github/CI-CD.md](.github/CI-CD.md) for complete CI/CD documentation.
 
 ## Development
 

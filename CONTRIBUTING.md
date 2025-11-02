@@ -136,6 +136,35 @@ All C code must:
 
 ## Testing
 
+All pull requests are automatically tested via GitHub Actions CI/CD pipeline. See [.github/CI-CD.md](../.github/CI-CD.md) for details.
+
+### Local Testing (Before Submitting PR)
+
+Run these checks locally before submitting a pull request:
+
+```bash
+# Lint all shell scripts (warnings as errors)
+shellcheck -S warning scripts/*.sh
+
+# Lint all markdown files
+markdownlint '**/*.md' --ignore node_modules
+
+# Check EditorConfig compliance
+editorconfig-checker
+
+# Build C code
+gcc -std=c2x -O2 -Wall -Wextra -Werror -o nct-id scripts/nct-id.c
+
+# Validate PKGBUILD syntax
+bash -n PKGBUILD
+
+# Validate shell script syntax
+bash -n scripts/*.sh
+
+# Validate example configurations
+bash -n examples/max-fans-restore.conf.example
+```
+
 ### Shell Script Testing
 
 ```bash

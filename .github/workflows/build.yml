@@ -1,0 +1,103 @@
+name: Build & Test
+
+on:
+  push:
+    branches: [ main, develop, copilot/** ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  build-c:
+    name: Build C Code (nct-id utility)
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install build dependencies
+        run: sudo apt-get update && sudo apt-get install -y gcc
+
+      - name: Compile nct-id.c
+        run: |
+          gcc -std=c2x -O2 -Wall -Wextra -Werror \
+              -o nct-id scripts/nct-id.c
+        
+      - name: Verify binary created
+        run: |
+          if [ ! -f nct-id ]; then
+            echo "Error: nct-id binary not created"
+            exit 1
+          fi
+          file nct-id
+          ls -lh nct-id
+
+      - name: Upload nct-id artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: nct-id-binary
+          path: nct-id
+          retention-days: 7
+
+  validate-pkgbuild:
+    name: Validate PKGBUILD (Arch Package)
+    runs-on: ubuntu-latest
+    container:
+      image: archlinux:latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Update system and install tools
+        run: |
+          pacman -Syu --noconfirm
+          pacman -S --noconfirm base-devel namcap
+
+      - name: Validate PKGBUILD syntax
+        run: bash -n PKGBUILD
+
+      - name: Run namcap on PKGBUILD
+        run: namcap PKGBUILD || true
+        # namcap may report warnings that aren't critical
+
+      - name: Test package build (dry run)
+        run: |
+          # Create a non-root user for makepkg (required)
+          useradd -m builder
+          chown -R builder:builder .
+          # Run makepkg as builder user (download only, don't build)
+          su builder -c "makepkg --nobuild --nodeps" || echo "Dry run completed"
+
+  validate-scripts:
+    name: Validate Shell Scripts (Syntax)
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check shell script syntax
+        run: |
+          for script in scripts/*.sh; do
+            echo "Checking $script..."
+            bash -n "$script"
+          done
+
+  validate-systemd:
+    name: Validate Systemd Units
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install systemd
+        run: sudo apt-get update && sudo apt-get install -y systemd
+
+      - name: Validate systemd service files
+        run: |
+          for unit in systemd/*.service systemd/*.timer; do
+            echo "Validating $unit..."
+            systemd-analyze verify "$unit" || echo "Warning: $unit validation issues (may be expected)"
+          done

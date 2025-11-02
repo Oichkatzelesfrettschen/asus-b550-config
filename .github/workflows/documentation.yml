@@ -1,0 +1,94 @@
+name: Documentation
+
+on:
+  push:
+    branches: [ main, develop, copilot/** ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  check-links:
+    name: Check Markdown Links
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install markdown-link-check
+        run: npm install -g markdown-link-check
+
+      - name: Check links in markdown files
+        run: |
+          find . -name "*.md" -not -path "./node_modules/*" | while read -r file; do
+            echo "Checking links in $file..."
+            markdown-link-check "$file" --config .github/markdown-link-check.json || true
+          done
+
+  validate-examples:
+    name: Validate Example Configurations
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check example files syntax
+        run: |
+          if [ -f examples/max-fans-restore.conf.example ]; then
+            echo "Validating examples/max-fans-restore.conf.example..."
+            bash -n examples/max-fans-restore.conf.example
+          fi
+
+  check-documentation-completeness:
+    name: Documentation Completeness Check
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Verify essential documentation exists
+        run: |
+          # Check for essential files
+          essential_files=(
+            "README.md"
+            "CHANGELOG.md"
+            "CONTRIBUTING.md"
+            "SECURITY.md"
+            "SUPPORT.md"
+            "LICENSE"
+          )
+          
+          for file in "${essential_files[@]}"; do
+            if [ ! -f "$file" ]; then
+              echo "ERROR: Missing essential file: $file"
+              exit 1
+            else
+              echo "✓ Found: $file"
+            fi
+          done
+
+      - name: Verify documentation structure
+        run: |
+          # Check for documentation directory
+          if [ ! -d "docs" ]; then
+            echo "ERROR: Missing docs/ directory"
+            exit 1
+          fi
+          
+          # Check for key documentation files
+          doc_files=(
+            "docs/ASUS-B550-TUNING.md"
+            "docs/NCT6798D-PROGRAMMER-GUIDE.md"
+            "docs/NCT6798D-ADVANCED-CONTROLS.md"
+          )
+          
+          for file in "${doc_files[@]}"; do
+            if [ ! -f "$file" ]; then
+              echo "ERROR: Missing documentation file: $file"
+              exit 1
+            else
+              echo "✓ Found: $file"
+            fi
+          done

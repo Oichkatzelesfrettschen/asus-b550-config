@@ -1,0 +1,62 @@
+name: Lint
+
+on:
+  push:
+    branches: [ main, develop, copilot/** ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  shellcheck:
+    name: ShellCheck (Shell Script Linting)
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run ShellCheck
+        uses: ludeeus/action-shellcheck@master
+        with:
+          severity: warning
+          scandir: './scripts'
+          format: gcc
+        env:
+          SHELLCHECK_OPTS: -S warning
+
+  markdownlint:
+    name: Markdownlint (Markdown Linting)
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install markdownlint-cli
+        run: npm install -g markdownlint-cli
+
+      - name: Run Markdownlint
+        run: markdownlint '**/*.md' --ignore node_modules
+
+  editorconfig:
+    name: EditorConfig Check
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install editorconfig-checker
+        run: |
+          wget -O /tmp/ec.tar.gz https://github.com/editorconfig-checker/editorconfig-checker/releases/latest/download/ec-linux-amd64.tar.gz
+          tar -xzf /tmp/ec.tar.gz -C /tmp
+          sudo mv /tmp/bin/ec-linux-amd64 /usr/local/bin/editorconfig-checker
+          sudo chmod +x /usr/local/bin/editorconfig-checker
+
+      - name: Run EditorConfig Checker
+        run: editorconfig-checker
