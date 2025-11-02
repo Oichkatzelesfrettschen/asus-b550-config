@@ -38,6 +38,7 @@ The **NCT6798D** is a **Nuvoton Super I/O** chip — a multi-function device tha
 - **ACPI EC**: Embedded Controller interface (telemetry path)
 
 On ASUS B550 boards, the NCT6798D is soldered on the motherboard and connected to both:
+
 - The **ISA I/O bus** (legacy x86 16-bit port I/O at 0x2E/0x4E, 0x290–0x29F)
 - The **ACPI Embedded Controller** (for vendor-specific extended telemetry)
 
@@ -103,12 +104,14 @@ static const struct nct6775_data nct6798_sio_data = {
 Inside the Super I/O, different subsystems are **logical devices**. Each has its own configuration registers. To access HWM (Hardware Monitor), you must:
 
 1. **Select logical device 0x0B** (the HWM block)
+
    ```c
    outb(0x2E, 0x07);     // CR 0x07 = device selector
    outb(0x2F, 0x0B);     // Select HWM (device 0x0B)
    ```
 
 2. **Read HWM base address** from CR 0x60/0x61 (where HWM's index/data ports are)
+
    ```c
    outb(0x2E, 0x60);     // CR 0x60 = HWM base address (high byte)
    unsigned char base_hi = inb(0x2F);
@@ -118,6 +121,7 @@ Inside the Super I/O, different subsystems are **logical devices**. Each has its
    ```
 
 3. **Use HWM base + offsets** to access temperature and PWM registers
+
    ```c
    // With HWM base = 0x0290:
    //   0x0290 = HWM index port
@@ -155,6 +159,7 @@ HWM Data Port  (base + 6):  0x0290 + 6 = 0x0296
 The NCT6798D has **6 PWM outputs** (PWM1–PWM6) and **Smart Fan IV** control.
 
 **SmartFan IV** is a hardware-native feature:
+
 - You define **temperature setpoints** (5 points per PWM channel)
 - For each setpoint, you specify a target **PWM duty cycle**
 - The hardware automatically adjusts PWM based on real-time temperature
@@ -375,6 +380,7 @@ watch -n 1 'cat /sys/class/hwmon/hwmon4/temp1_input /sys/class/hwmon/hwmon4/pwm1
 **Which temperature sensor to use for SmartFan IV?**
 
 Options:
+
 1. **CPUTIN** (CPU package temp via PECI) — **RECOMMENDED**
    - Direct CPU temperature
    - Fastest response
@@ -413,6 +419,7 @@ sudo /usr/lib/eirikr/nct-id
 ```
 
 **What this tells you**:
+
 - Chip is physically present and accessible
 - Firmware hasn't disabled the Super I/O
 - Kernel driver will find it automatically
@@ -464,6 +471,7 @@ cat $HWMON/pwm1
 ```
 
 If this fails:
+
 - Permission denied: Run as root (`sudo`)
 - Input/output error: Driver not loaded (`sudo modprobe nct6775`)
 - File not found: Wrong hwmon device path (check `ls /sys/class/hwmon/`)
@@ -479,6 +487,7 @@ If this fails:
 **Root cause**: ASUS BIOS declares ISA I/O ports as owned by firmware
 
 **Modern kernels (5.9+)**: Handled automatically via ASUS WMI
+
 - No action needed
 - Driver transparently uses RSIO/WSIO methods
 - sysfs interface works normally
@@ -512,11 +521,13 @@ sensors | grep -E "Core|CPUTIN|SYSTIN|Package"
 ### 5.3 EC vs Super I/O Confusion
 
 **EC sensors** (via `asus_ec_sensors` driver):
+
 - **Read-only** (telemetry: VRM voltage, current draw)
 - Do NOT provide PWM control
 - Different driver (`asus_ec_sensors`, not `nct6775`)
 
 **Super I/O sensors** (via `nct6775` driver):
+
 - **Read/write** (temperature, PWM, SmartFan IV control)
 - This is what you use for fan control
 
@@ -534,6 +545,7 @@ sudo /usr/lib/eirikr/max-fans-enhanced.sh --manual 255
 ```
 
 **What happens**:
+
 1. Script finds NCT6798D hwmon device
 2. Sets `pwm1_enable = 1` (manual mode) for each PWM
 3. Writes `255` to each `pwmN` register
@@ -547,6 +559,7 @@ sudo /usr/lib/eirikr/max-fans-enhanced.sh --smartfan
 ```
 
 **What happens**:
+
 1. Script finds NCT6798D hwmon device
 2. Writes 5 temperature setpoints and corresponding PWM values
 3. Sets `pwm1_enable = 5` (SmartFan IV mode)
@@ -603,6 +616,7 @@ stress --cpu 6 --timeout 60s
 ```
 
 You should see:
+
 - Temp rising from ~45°C to 80°C
 - PWM following curve: 64 → 96 → 128 → 192 → 255
 - Fan RPM increasing in real-time

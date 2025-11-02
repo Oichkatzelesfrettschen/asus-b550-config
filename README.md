@@ -67,6 +67,7 @@ makepkg -si
 ### Basic Usage
 
 Set all fans to maximum speed:
+
 ```bash
 sudo /usr/lib/eirikr/max-fans.sh
 ```
@@ -140,15 +141,19 @@ ls /usr/share/doc/eirikr-asus-b550-config/
 ## Control Modes Explained
 
 ### Mode 1: Manual PWM
+
 Fixed fan speed (0-255). Immediate response but no thermal regulation.
 
 ### Mode 2: Thermal Cruise
+
 Hardware maintains target temperature. Good for quiet operation with steady workloads.
 
 ### Mode 3: Speed Cruise
+
 Hardware maintains target RPM. Requires accurate tachometry calibration.
 
 ### Mode 5: SmartFan IV
+
 Multi-point temperature curve (up to 5 points on this hardware). Best for variable workloads.
 
 ## Features
@@ -191,17 +196,20 @@ sudo /usr/lib/eirikr/max-fans-advanced.sh --verify
 ### Fans don't respond to SmartFan IV
 
 1. Check electrical mode:
+
    ```bash
    cat /sys/class/hwmon/hwmon2/pwm1_mode
    # 0 = DC mode, 1 = PWM mode
    ```
 
 2. Verify temperature sensor is active:
+
    ```bash
    cat /sys/class/hwmon/hwmon2/temp1_input
    ```
 
 3. Check firmware hasn't reset settings:
+
    ```bash
    sudo /usr/lib/eirikr/max-fans-advanced.sh --verify
    ```
@@ -210,6 +218,7 @@ sudo /usr/lib/eirikr/max-fans-advanced.sh --verify
 
 1. Disable EEE if not already done (electrical issue, not this package)
 2. Increase step timing to reduce fan cycling:
+
    ```bash
    sudo /usr/lib/eirikr/max-fans-advanced.sh --smartfan-7pt --timing 1000 1500 5000
    ```
@@ -309,9 +318,11 @@ Installation Layout:
 ### Confirmed Working Boards
 
 Confirmed working:
+
 - ASUS ROG STRIX B550-F GAMING WIFI
 
 Should work on:
+
 - Any ASUS B550 with NCT6798D
 - ASUS X570 with NCT6798D
 - Other boards with NCT6798D Super I/O
@@ -377,7 +388,7 @@ This software is licensed under the **GNU General Public License v3.0 (GPLv3)**.
 
 You are free to use, modify, and distribute this software under the terms of the GPL v3. Any modified versions must also be licensed under GPLv3 and include source code availability.
 
-See `LICENSE` file for full details: https://www.gnu.org/licenses/gpl-3.0.html
+See `LICENSE` file for full details: <https://www.gnu.org/licenses/gpl-3.0.html>
 
 ## Support
 
@@ -387,7 +398,7 @@ Need help? Check out our comprehensive support resources:
 - **[GitHub Issues](https://github.com/Oichkatzelesfrettschen/asus-b550-config/issues)** — Report bugs and request features
 - **[GitHub Discussions](https://github.com/Oichkatzelesfrettschen/asus-b550-config/discussions)** — Ask questions and share ideas
 - **Documentation** — See [docs/](docs/) for technical references
-- **Kernel docs**: https://docs.kernel.org/6.0/hwmon/nct6775.html
+- **Kernel docs**: <https://docs.kernel.org/6.0/hwmon/nct6775.html>
 
 For security vulnerabilities, please see [SECURITY.md](SECURITY.md) for responsible disclosure.
 

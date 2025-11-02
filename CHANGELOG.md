@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
+
 - Reorganized repository structure for better maintainability
   - Moved documentation to `docs/` directory
   - Moved scripts to `scripts/` directory
@@ -17,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated PKGBUILD to reflect new directory structure
 
 ### Added
+
 - `CONTRIBUTING.md` with comprehensive contribution guidelines
 - `CHANGELOG.md` for version tracking
 - `examples/max-fans-restore.conf.example` with detailed usage examples
@@ -25,6 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.3.0] - 2025-11-02
 
 ### Added
+
 - Complete NCT6798D hardware monitoring and fan control
 - 7-point SmartFan IV curves with configurable timing
 - Thermal Cruise mode for constant temperature control
@@ -38,15 +41,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Comprehensive technical documentation
 
 ### Changed
+
 - License changed from CC0 to GNU General Public License v3.0
 
 ### Fixed
+
 - Hardware monitor permission issues via udev rules
 - SATA resume compatibility improvements
 
 ## [1.0.0] - Initial Release
 
 ### Added
+
 - Basic fan control functionality
 - PKGBUILD for Arch Linux
 - README with installation instructions

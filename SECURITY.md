@@ -73,6 +73,7 @@ We consider the following security-relevant:
 - **Low**: Configuration issues, minor information leaks
 
 Out of scope:
+
 - Hardware failures due to overclocking or extreme settings (user responsibility)
 - Firmware bugs (report to motherboard vendor)
 - Kernel driver bugs (report to Linux kernel developers)
@@ -80,6 +81,7 @@ Out of scope:
 ## Updates and Patches
 
 Security updates will be:
+
 - Released as patch versions (e.g., 1.3.1)
 - Documented in [CHANGELOG.md](CHANGELOG.md)
 - Announced via GitHub releases
@@ -88,6 +90,7 @@ Security updates will be:
 ## External Dependencies
 
 This project has minimal dependencies:
+
 - `systemd` - System and service manager
 - `lm_sensors` - Hardware monitoring utilities
 - `gcc` - For building nct-id utility

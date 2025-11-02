@@ -13,23 +13,27 @@ Complete example configuration for the `max-fans-restore.service` persistence me
 **Usage**:
 
 1. Review the example file and customize it for your needs:
+
    ```bash
    cat /path/to/examples/max-fans-restore.conf.example
    ```
 
 2. Copy the customized version to the system location:
+
    ```bash
    sudo cp examples/max-fans-restore.conf.example /usr/local/etc/max-fans-restore.conf
    sudo chmod +x /usr/local/etc/max-fans-restore.conf
    ```
 
 3. Enable and start the timer:
+
    ```bash
    sudo systemctl enable max-fans-restore.timer
    sudo systemctl start max-fans-restore.timer
    ```
 
 4. Verify it works:
+
    ```bash
    sudo systemctl status max-fans-restore.service
    journalctl -u max-fans-restore.service

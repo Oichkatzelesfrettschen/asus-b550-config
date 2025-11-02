@@ -57,19 +57,25 @@ makepkg -f -C
 
 1. **Fork the repository** on GitHub
 2. **Create a feature branch** from `main`:
+
    ```bash
    git checkout -b feature/my-feature
    ```
+
 3. **Make your changes** following coding standards
 4. **Test thoroughly** on real hardware (if possible)
 5. **Commit with clear messages**:
+
    ```bash
    git commit -m "Add feature: brief description"
    ```
+
 6. **Push to your fork**:
+
    ```bash
    git push origin feature/my-feature
    ```
+
 7. **Submit a pull request** to the main repository
 
 ## Coding Standards
@@ -89,6 +95,7 @@ All shell scripts must:
   - Functions: `verb_noun` format
 
 Example:
+
 ```bash
 #!/bin/bash
 set -u
@@ -190,6 +197,7 @@ sudo pacman -R eirikr-asus-b550-config
 ```
 
 Types:
+
 - `feat`: New feature
 - `fix`: Bug fix
 - `docs`: Documentation changes
@@ -199,6 +207,7 @@ Types:
 - `chore`: Build process, tooling, dependencies
 
 Example:
+
 ```
 feat: Add support for Speed Cruise mode
 
@@ -245,10 +254,13 @@ sudo max-fans-advanced.sh --feature
 ```
 
 ## Technical Details
+
 How it works under the hood
 
 ## Troubleshooting
+
 Common issues and solutions
+
 ```
 
 ## Hardware Compatibility

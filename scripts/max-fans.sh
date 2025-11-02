@@ -20,8 +20,7 @@ log_error() {
 }
 
 set_fan_max() {
-  local device="$1"
-  local pwm_file="$2"
+  local pwm_file="$1"
 
   if [[ ! -w "$pwm_file" ]]; then
     log_error "Cannot write to $pwm_file (permission denied)"
@@ -67,7 +66,7 @@ main() {
         continue
       fi
 
-      if set_fan_max "$device_name" "$pwm_file"; then
+      if set_fan_max "$pwm_file"; then
         fans_set=$((fans_set + 1))
       else
         fans_failed=$((fans_failed + 1))
