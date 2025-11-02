@@ -4,7 +4,7 @@ pkgrel=1
 pkgdesc="ASUS B550 motherboard tuning: maximal on-chip NCT6798D fan control (7-point curves, thermal cruise, dual-sensor blending, electrical mode, tachometry)"
 arch=('x86_64')
 url="https://github.com/oaich/asus-b550-config"
-license=('custom')
+license=('GPL3')
 depends=('systemd' 'lm_sensors')
 makedepends=('gcc')
 optdepends=(
@@ -170,8 +170,8 @@ package() {
   install -Dm644 "${srcdir}/NCT6798D-ADVANCED-CONTROLS.md" \
     "${pkgdir}/usr/share/doc/${pkgname}/NCT6798D-ADVANCED-CONTROLS.md"
 
-  # License file (dual-reference)
-  # WHY: Project is public domain / CC0; document at least one reference
-  install -Dm644 "${srcdir}/ASUS-B550-TUNING.md" \
+  # License file (GNU GPLv3)
+  # WHY: Proprietary project under GPL3 copyleft license
+  install -Dm644 "${srcdir}/LICENSE" \
     "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }

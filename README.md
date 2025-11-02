@@ -316,15 +316,15 @@ Improvements and bug reports welcome:
 4. Push to your fork
 5. Submit a pull request
 
-All contributions are licensed under CC0 (public domain).
+All contributions are licensed under GPLv3.
 
 ## License
 
-This software is placed in the **public domain** under Creative Commons Zero v1.0 Universal (CC0 1.0).
+This software is licensed under the **GNU General Public License v3.0 (GPLv3)**.
 
-You are free to use, modify, distribute, and commercialize this software without restriction or attribution.
+You are free to use, modify, and distribute this software under the terms of the GPL v3. Any modified versions must also be licensed under GPLv3 and include source code availability.
 
-See `LICENSE` file for full details.
+See `LICENSE` file for full details: https://www.gnu.org/licenses/gpl-3.0.html
 
 ## Support
 
@@ -352,7 +352,7 @@ Built with rigorous engineering, exhaustive testing, and zero compromises on qua
 
 ---
 
-**Version**: 1.3.0  
-**Last Updated**: 2025-11-02  
-**Status**: Production-ready  
-**License**: CC0 1.0 Universal (Public Domain)
+**Version**: 1.3.0
+**Last Updated**: 2025-11-02
+**Status**: Production-ready
+**License**: GNU General Public License v3.0 (GPLv3)
