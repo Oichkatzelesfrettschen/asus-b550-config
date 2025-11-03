@@ -108,7 +108,7 @@ jobs:
           namcap *.pkg.tar.* || true
 
       - name: Upload package artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: arch-package
           path: '*.pkg.tar.*'
